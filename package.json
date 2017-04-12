@@ -23,6 +23,7 @@
     "express-session": "^1.15.1",
     "express-xbatis": "0.1.0",
     "express-xmodel": "0.1.0",
-    "express-xnosql": "0.1.0"
+    "express-xnosql": "0.1.0",
+    "express-xcontroller": "0.1.0"
   }
 }
