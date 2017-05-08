@@ -15,3 +15,13 @@ xserver应用中间件组件服务express版本
 	    ├── nodebatis
 	    ├── sequelize
 	    └── yaml
+
+帮助联系
+>
+	作者:cheneyxu
+	邮箱:457299596@qq.com
+	QQ:457299596
+
+更新日志
+>
+	2017.05.08:集成passport认证中间件

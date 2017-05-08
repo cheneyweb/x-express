@@ -1,5 +1,6 @@
 {
     "db": {
+        "url": "mongodb://localhost:27017/test",
         "host": "localhost",
         "port": 3306,
         "dbname": "test",
@@ -11,6 +12,9 @@
     },
     "server": {
         "port": 8081,
-        "modelDir": "/src/model/"
+        "modelDir": "/src/model/",
+        "staticRoot": "/xserver/static/",
+        "controllerRoot": "/xserver/",
+        "controllerDir": "/src/controller/"
     }
 }
