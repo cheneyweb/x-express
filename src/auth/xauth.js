@@ -4,6 +4,11 @@ const router = express.Router()
 // 认证相关
 const passport = require(__dirname + '/passport_config.js')
 
+// 角色权限
+let acl = require('acl')
+acl = new acl(new acl.memoryBackend())
+acl.allow('admin', 'xbatis', 'remove')
+
 /**
  * 登录认证
  */
@@ -13,6 +18,7 @@ router.post('/xauth/login', function (req, res, next) {
         if (user) {
             return req.logIn(user,function(){
                 res.send('Y')
+                acl.addUserRoles(user.id, 'admin')// 添加用户与其角色，这里模拟使用admin
             })
         } else {
             return res.send(info)
@@ -38,9 +44,16 @@ router.post('/xauth/test', function (req, res) {
 })
 
 // 以下为自定义需要身份认证的路由
-router.post('/xbatis/*/remove', function (req, res, next) {
+router.post('/xbatis/*/remove', async function (req, res, next) {
     if (req.isAuthenticated()) {
-        return next()
+        // 权限判断
+        let aclResult = await acl.isAllowed(req.session.passport.user.id, 'xbatis', 'remove')
+        // 根据权限认证结果返回
+        if(aclResult){
+            return await next()
+        }else{
+            res.sendStatus(401)
+        }
     } else {
         res.sendStatus(401)
     }
