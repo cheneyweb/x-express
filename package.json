@@ -23,6 +23,7 @@
     "nodebatis": "^2.1.1",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
+    "redis": "^2.7.1",
     "sequelize": "^3.30.2"
   }
 }

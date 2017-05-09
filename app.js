@@ -15,6 +15,7 @@ const modelDir = __dirname + config.server.modelDir
 // 中间件应用服务
 const express = require('express')
 const bodyParser = require('body-parser')
+const redis = require("redis")
 const xcontroller = require('express-xcontroller')
 const xmodel = require('express-xmodel')
 const xbatis = require('express-xbatis')
@@ -38,6 +39,12 @@ app.use(expressSession({
     resave: false,
     saveUninitialized: false
 }))
+const client = redis.createClient()
+// client.on('connect',function(){
+    client.set('author', 'cheneyxu',redis.print)
+    client.get('author', redis.print)
+// })
+
 // 加载认证路由
 app.use(passport.initialize())
 app.use(passport.session())
