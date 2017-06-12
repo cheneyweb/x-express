@@ -52,7 +52,7 @@ app.use('/xmodel/', xmodel)
 // 3、使用express-xbatis中间件
 app.use('/xbatis/', xbatis)
 // 4、使用express-xnosql中间件
-xnosql.dburl = config.db.url
+xnosql.initConnect(config.mongodb.url)// 初始化mongodb连接
 app.use('/xnosql/', xnosql)
 
 // 开始服务监听

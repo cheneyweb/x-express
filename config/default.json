@@ -1,11 +1,13 @@
 {
     "db": {
-        "url": "mongodb://localhost:27017/test",
         "host": "localhost",
         "port": 3306,
         "dbname": "test",
         "username": "root",
         "password": "root"
+    },
+    "mongodb": {
+        "url": "mongodb://localhost:27017/test"
     },
     "log": {
         "level": "info"
