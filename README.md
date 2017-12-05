@@ -1,6 +1,8 @@
 # x-express
 xserver应用中间件组件服务express版本
 
+[传送门：XServer官网文档](http://xserver.top)
+
 框架目录结构
 >
 	├── app.js
@@ -27,3 +29,4 @@ xserver应用中间件组件服务express版本
 	2017.05.08:集成passport认证中间件
 	2017.05.09:集成redis缓存服务，集成acl角色权限控制服务
 	2017.06.11:重构数据库连接方式
+	2017.12.05:更新所有依赖
