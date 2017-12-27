@@ -4,15 +4,11 @@ const port = config.server.port
 const staticRoot = config.server.staticRoot
 const controllerRoot = config.server.controllerRoot
 const controllerDir = __dirname + config.server.controllerDir
-// 认证相关
-const expressSession = require('express-session')
-const passport = require(__dirname + '/src/auth/passport_config.js')
-const xauth = require(__dirname + '/src/auth/xauth.js')
 // 持久层相关
 const nodebatis = require(__dirname + '/src/nodebatis/nodebatis.js')
 const sequelize = require(__dirname + '/src/sequelize/sequelize.js')
 const modelDir = __dirname + config.server.modelDir
-// 中间件应用服务
+// 应用中间件
 const express = require('express')
 const bodyParser = require('body-parser')
 const redis = require("redis")
@@ -20,33 +16,42 @@ const xcontroller = require('express-xcontroller')
 const xmodel = require('express-xmodel')
 const xbatis = require('express-xbatis')
 const xnosql = require('express-xnosql')
+const xerror = require('express-xerror')
+const xauth = require('express-xauth')
+const xlog = require('express-xlog')
 // 日志相关
 const log = require('tracer').colorConsole({ level: config.log.level })
 
 // 初始化应用服务器
 const app = express()
+// 静态资源服务
+app.use(staticRoot, express.static(__dirname + '/static'))
 app.use(bodyParser.json())
-app.use(expressSession({
-    secret: 'cheneyxu',
-    resave: false,
-    saveUninitialized: false
-}))
+app.use(xlog(config.log, (req) => { log.info('异步日志处理', req.body) }))
+app.use(xauth(config.auth, (v) => v))                                          // 参数1：认证配置，参数2：TOKEN提取规则
+
+// // 认证相关
+// app.use(expressSession({
+//     secret: 'cheneyxu',
+//     resave: false,
+//     saveUninitialized: false
+// }))
+// const expressSession = require('express-session')
+// const passport = require(__dirname + '/src/auth/passport_config.js')
+// const xauth = require(__dirname + '/src/auth/xauth.js')
+// // 加载认证路由
+// app.use(passport.initialize())
+// app.use(passport.session())
+// app.use('/', xauth)
+// REDIS缓存服务
 // const client = redis.createClient()
 // client.on('connect',function(){
 // client.set('author', 'cheneyxu',redis.print)
 // client.get('author', redis.print)
 // })
 
-// 加载认证路由
-app.use(passport.initialize())
-app.use(passport.session())
-app.use('/', xauth)
-
-// 静态资源服务
-app.use(staticRoot, express.static(__dirname + '/static'))
-
 // 1、使用express-xcontroller中间件,加载所有控制器
-xcontroller.loadController(app, controllerRoot, controllerDir)					// 应用实例,访问根路径,控制器目录路径
+xcontroller.loadController(app, controllerRoot, controllerDir)				  // 应用实例,访问根路径,控制器目录路径
 // 2、使用express-xmodel中间件
 xmodel.initConnect(modelDir, sequelize)  // 初始化mysql连接
 app.use('/xmodel/', xmodel)
@@ -56,6 +61,9 @@ app.use('/xbatis/', xbatis)
 // 4、使用express-xnosql中间件
 xnosql.initConnect(config.mongodb.url)  // 初始化mongodb连接
 app.use('/xnosql/', xnosql)
+
+app.use(xerror(config.error, (ctx, err) => { log.info('额外可选错误处理') }))   // 全局异常捕获，需要在最后一位路由处理
+
 
 // 开始服务监听
 app.listen(port)

@@ -10,7 +10,13 @@
         "url": "mongodb://localhost:27017/test"
     },
     "log": {
-        "level": "warn"
+        "level": "warn",
+        "header": {
+            "loglist": ["content-type"]
+        }
+    },
+    "error": {
+        "debug": false
     },
     "server": {
         "port": 8081,
