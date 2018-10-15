@@ -6,9 +6,6 @@
         "username": "root",
         "password": "root"
     },
-    "mongodb": {
-        "url": "mongodb://localhost:27017/test"
-    },
     "log": {
         "level": "log",
         "header": {
@@ -16,13 +13,18 @@
         }
     },
     "error": {
-        "debug": true
+        "debug": true,
+        "errStatus": 500
     },
     "server": {
-        "port": 8081,
+        "port": 3636,
+        "xmodelRoot": "/xmodel",
         "modelDir": "/src/model/",
+        "middlewareDir": "/src/middleware/",
         "staticRoot": "/xserver/static/",
-        "controllerRoot": "/xserver/",
-        "controllerDir": "/src/controller/"
+        "controllerRoot": "/xserver",
+        "controllerDir": "/src/controller/",
+        "xnosqlRoot": "/xnosql",
+        "mongodbUrl": "mongodb://localhost:27017/test"
     }
 }

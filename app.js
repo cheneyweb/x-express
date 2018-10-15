@@ -2,16 +2,13 @@
 const config = require('config')
 const port = config.server.port
 const staticRoot = config.server.staticRoot
-const controllerRoot = config.server.controllerRoot
-const controllerDir = __dirname + config.server.controllerDir
 // 持久层相关
 const nodebatis = require(__dirname + '/src/nodebatis/nodebatis.js')
 const sequelize = require(__dirname + '/src/sequelize/sequelize.js')
-const modelDir = __dirname + config.server.modelDir
 // 应用中间件
 const express = require('express')
 const bodyParser = require('body-parser')
-const redis = require("redis")
+// const redis = require("redis")
 const xcontroller = require('express-xcontroller')
 const xmodel = require('express-xmodel')
 const xbatis = require('express-xbatis')
@@ -51,27 +48,27 @@ app.use(xauth(config.auth, (v) => v))                                          /
 // })
 
 // 1、使用express-xcontroller中间件,加载所有控制器
-xcontroller.loadController(app, controllerRoot, controllerDir)				  // 应用实例,访问根路径,控制器目录路径
+xcontroller.init(app, config.server)
 // 2、使用express-xmodel中间件
-xmodel.initConnect(modelDir, sequelize)  // 初始化mysql连接
-app.use('/xmodel/', xmodel)
+xmodel.init(app, sequelize, config.server) // 初始化mysql连接
 // 3、使用express-xbatis中间件
-xbatis.initConnect(nodebatis)           // 初始化mysql连接
-app.use('/xbatis/', xbatis)
+xbatis.init(app, nodebatis, config.server) // 初始化mysql连接
 // 4、使用express-xnosql中间件
-xnosql.initConnect(config.mongodb.url)  // 初始化mongodb连接
-app.use('/xnosql/', xnosql)
+xnosql.init(app, config.server)
 
-app.use(xerror(config.error, (ctx, err) => { log.info('额外可选错误处理') }))   // 全局异常捕获，需要在最后一位路由处理
-
+app.use(xerror(config.error, (req, res, err) => { // 需要在最后一位路由处理
+    log.info('额外可选错误处理')
+    const result = { err: err.message }
+    result.stack = err.stack
+    res.status(200).send(result)
+}))
 
 // 开始服务监听
 app.listen(port)
 log.info(`XServer应用启动【执行环境:${process.env.NODE_ENV},端口:${port}】`)
 log.warn(`静态资源访问路径【localhost:${port}${staticRoot}*】`)
-log.warn(`RESTful  API路径【localhost:${port}${controllerRoot}MODULE_NAME/*】`)
-log.info(`===============================================================`)
-log.warn(`XModel服务已启动`)
+log.info(`RESTful  API路径【localhost:${port}${config.server.controllerRoot}/MODULE_NAME/*】`)
+log.info(`XModel服务已启动`)
 log.info(`[POST]http://localhost:${port}/xmodel/MODEL/create`)
 log.info(`[POST]http://localhost:${port}/xmodel/MODEL/update`)
 log.info(`[POST]http://localhost:${port}/xmodel/MODEL/query`)
