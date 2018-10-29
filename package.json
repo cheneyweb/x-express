@@ -14,13 +14,13 @@
     "config": "^2.0.1",
     "express": "^4.16.4",
     "express-session": "^1.15.6",
-    "express-xauth": "^1.0.0",
-    "express-xbatis": "^1.0.0",
-    "express-xcontroller": "^1.0.0",
-    "express-xerror": "^1.0.0",
-    "express-xlog": "^1.0.0",
-    "express-xmodel": "^1.0.0",
-    "express-xnosql": "^1.5.0",
+    "express-xauth": "^1.1.0",
+    "express-xbatis": "^1.1.0",
+    "express-xcontroller": "^1.1.0",
+    "express-xerror": "^1.1.0",
+    "express-xlog": "^1.1.0",
+    "express-xmodel": "^1.1.0",
+    "express-xnosql": "^1.6.0",
     "moment": "^2.22.2",
     "mongodb": "^3.1.8",
     "mysql2": "^1.6.1",
@@ -28,6 +28,6 @@
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "redis": "^2.8.0",
-    "sequelize": "^4.39.0"
+    "sequelize": "^4.41.0"
   }
 }
